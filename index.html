@@ -997,13 +997,73 @@ footer .brand img{height:42px}
      SITE CONFIG  ←  PASTE YOUR APPS SCRIPT WEB APP URL HERE
 ==================================================================== -->
 <script>
-window.VOGUE_CONFIG = {
-  whatsappNumber:   "918433220257",
-  whatsappPrefill:  "I want to know about the maternity packages",
-  googleBusiness:   "https://share.google/58xOmEpXyT5qtqSoQ",
-  // Apps Script Web App endpoint (deployed as "Anyone")
-  sheetsWebAppUrl:  "https://script.google.com/macros/s/AKfycbweAxrqo31HSv2-fQ08_yDP6fXE6V5-66Rpp7awxiXtl5DyOKF-m33qBu9JhDBdQwFZZg/exec"
-};
+var SCRIPT_URL = 'https://https://script.google.com/macros/s/AKfycbwCZSPjnlC4LB4sPa0NSFdlwbXKJPeMfdmi7OEhR7fOvkXpsQjCqKWeI9lPCGAnxwvBiw/exec';
+
+function showError(message, focusId) {
+  var err = document.getElementById('errorMsg');
+  err.textContent = message;
+  err.classList.add('show');
+  if (focusId) document.getElementById(focusId).focus();
+}
+
+function clearError() {
+  document.getElementById('errorMsg').classList.remove('show');
+}
+
+async function submitForm() {
+  clearError();
+
+  var name = document.getElementById('name').value.trim();
+  var location = document.getElementById('location').value.trim();
+  var pregnancyMonth = document.getElementById('pregnancyMonth').value.trim();
+  var decisionMadeBy = document.getElementById('decisionMadeBy').value.trim();
+  var whatsappNumber = document.getElementById('whatsappNumber').value.trim();
+  var budgetRange = document.getElementById('budgetRange').value.trim();
+  var consentGiven = document.getElementById('consentGiven').checked;
+
+  if (!name) return showError('⚠️ Please enter your Name!', 'name');
+  if (!location) return showError('⚠️ Please choose a location!', 'location');
+  if (!pregnancyMonth) return showError('⚠️ Please select pregnancy month!', 'pregnancyMonth');
+  if (!decisionMadeBy) return showError('⚠️ Please select who decides the booking!', 'decisionMadeBy');
+  if (!whatsappNumber) return showError('⚠️ Please enter WhatsApp number!', 'whatsappNumber');
+  if (!budgetRange) return showError('⚠️ Please select your budget range!', 'budgetRange');
+  if (!consentGiven) return showError('⚠️ Please agree to be contacted on WhatsApp!', 'consentGiven');
+
+  var btn = document.getElementById('submitBtn');
+  btn.textContent = '⏳ Submitting... Please Wait...';
+  btn.disabled = true;
+
+  try {
+    var formData = new FormData();
+    formData.append('name', name);
+    formData.append('location', location);
+    formData.append('pregnancyMonth', pregnancyMonth);
+    formData.append('decisionMadeBy', decisionMadeBy);
+    formData.append('whatsappNumber', whatsappNumber);
+    formData.append('budgetRange', budgetRange);
+    formData.append('consentGiven', consentGiven);
+
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: formData
+    });
+
+    document.getElementById('overlay').classList.add('show');
+    document.querySelectorAll('input,textarea').forEach(function(el){ el.value = ''; });
+    document.querySelectorAll('input[type="radio"],input[type="checkbox"]').forEach(function(el){ el.checked = false; });
+
+    setTimeout(function(){
+      document.getElementById('overlay').classList.remove('show');
+    }, 6000);
+
+  } catch (error) {
+    showError('⚠️ Something went wrong. Please try again.');
+  } finally {
+    btn.textContent = '✦  Submit My Entry  ✦';
+    btn.disabled = false;
+  }
+}
 </script>
 <!-- ====================================================================
      SITE CONFIG  ← Google Linking
