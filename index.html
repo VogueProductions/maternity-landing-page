@@ -1005,7 +1005,27 @@ window.VOGUE_CONFIG = {
   sheetsWebAppUrl:  "https://script.google.com/macros/s/AKfycbweAxrqo31HSv2-fQ08_yDP6fXE6V5-66Rpp7awxiXtl5DyOKF-m33qBu9JhDBdQwFZZg/exec"
 };
 </script>
+<!-- ====================================================================
+     SITE CONFIG  ← Google Linking
+==================================================================== -->
+<script>
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
 
+      fetch('<https://script.google.com/macros/s/AKfycbwCZSPjnlC4LB4sPa0NSFdlwbXKJPeMfdmi7OEhR7fOvkXpsQjCqKWeI9lPCGAnxwvBiw/exec>', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => alert('Form submitted successfully'))
+      .catch(error => console.error('Error:', error));
+    });
+  </script>
+
+
+  
 <!-- ====================================================================
      PAGE LOGIC
 ==================================================================== -->
