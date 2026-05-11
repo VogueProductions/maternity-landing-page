@@ -1154,18 +1154,7 @@ window.VOGUE_CONFIG = {
     console.error('[Vogue] Google Sheets error:', err);
   });
 }
-      .then(response => {
-        console.info('[Vogue] ✓ Lead dispatched to Google Sheets (GET)');
-        return response;
-      })
-      .catch(err => {
-        console.warn('[Vogue] dispatch error (GET failed, trying POST):', err);
-        
-        // Fallback: Try POST with FormData if GET fails
-        const fd = new FormData();
-        Object.keys(params).forEach(k => {
-          fd.append(k, params[k] == null ? '' : String(params[k]));
-        });
+      
         
         return fetch(url, { 
           method: 'POST', 
