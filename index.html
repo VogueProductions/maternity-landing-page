@@ -1154,22 +1154,6 @@ window.VOGUE_CONFIG = {
     console.error('[Vogue] Google Sheets error:', err);
   });
 }
-      
-        
-        return fetch(url, { 
-          method: 'POST', 
-          mode: 'no-cors',
-          body: fd 
-        })
-          .then(response => {
-            console.info('[Vogue] ✓ Lead dispatched to Google Sheets (POST)');
-            return response;
-          })
-          .catch(postErr => {
-            console.warn('[Vogue] POST dispatch error:', postErr);
-          });
-      });
-  }
 
   /* ---------- Form submit ---------- */
   form.addEventListener('submit', async e => {
