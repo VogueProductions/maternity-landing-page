@@ -1130,30 +1130,30 @@ window.VOGUE_CONFIG = {
      written to the sheet reliably.
   ==================================================================== */
   function sendToSheets(params){
-    const url = CFG.sheetsWebAppUrl;
-    if (!url || url.indexOf('PASTE_YOUR_WEB_APP_URL_HERE') !== -1){
-      console.warn('[Vogue] sheetsWebAppUrl not set — skipping send.');
-      return Promise.resolve();
-    }
-    
-    console.log('[Vogue] Sending data to Google Sheets...');
-    console.log('[Vogue] URL:', url);
-    console.log('[Vogue] Params:', JSON.stringify(params));
+  const url = CFG.sheetsWebAppUrl;
 
-    // Method 1: Try GET with URL parameters (more reliable with no-cors)
-    // Build query string
-    const queryString = Object.keys(params)
-      .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k] == null ? '' : String(params[k])))
-      .join('&');
-    
-    const getUrl = url + '?' + queryString;
-    
-    console.log('[Vogue] Using GET method with URL parameters');
-    
-    return fetch(getUrl, { 
-      method: 'GET',
-      mode: 'no-cors'
-    })
+  const queryString = Object.keys(params)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k] == null ? '' : String(params[k])))
+    .join('&');
+
+  const getUrl = url + '?' + queryString;
+
+  console.log('[Vogue] Sending data to Google Sheets...');
+  console.log('[Vogue] Final URL:', getUrl);
+
+  return fetch(getUrl, {
+    method: 'GET',
+    redirect: 'follow'
+  })
+  .then(res => res.text())
+  .then(text => {
+    console.log('[Vogue] Apps Script response:', text);
+    return text;
+  })
+  .catch(err => {
+    console.error('[Vogue] Google Sheets error:', err);
+  });
+}
       .then(response => {
         console.info('[Vogue] ✓ Lead dispatched to Google Sheets (GET)');
         return response;
